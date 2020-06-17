@@ -34,17 +34,19 @@ class Catcher extends Phaser.Scene{
 		this.loading = this.physics.add.staticGroup();
 		this.loading = this.physics.add.sprite(250, 25,'load');
 
-		
-		this.human = this.physics.add.sprite(255, 200,'falling');		
-
-
-
-		//this.human = this.physics.add.sprite(255, 200,'falling');		
+		//this.human = this.physics.add.sprite(255, 200,'falling');
+		//this.human.setCollideWorldBounds(true);
+		this.alea = Phaser.Math.Between(88, 992);
+  
+		this.humans = this.physics.add.group({
+    		key: 'falling',
+    		repeat: 0,
+    		setXY: { x: this.alea, y: 200, stepX: 0 }
+		});
 
 		this.player.setCollideWorldBounds(true);
 		this.player1.setCollideWorldBounds(true);
-		this.human.setCollideWorldBounds(true);
-		this.physics.add.collider(this.player1,this.human,this.point,null,this);
+		this.physics.add.collider(this.player1,this.humans,this.point,null,this);
 
 		this.anims.create({
 			key:'tombe',
@@ -61,6 +63,8 @@ class Catcher extends Phaser.Scene{
 		});
 
 
+
+
 //----------------TIMER------------------//
 		var time1;
 		time1 = this.time.addEvent({ delay: 10000/*10000*/, callback: ()=>{
@@ -75,7 +79,9 @@ class Catcher extends Phaser.Scene{
 
         this.rand = Phaser.Math.RND.between(1,5);
 			this.alea = Phaser.Math.Between(88, 992);
-            this.human = this.physics.add.sprite(this.alea, 200,'falling');
+            this.humans = this.physics.add.sprite(this.alea, 200,'falling');
+			//this.humans.setCollideWorldBounds(true);
+			this.physics.add.collider(this.player1,this.humans,this.point,null,this);
     	}, loop: true});
 //--------------------------------------//
 
@@ -94,7 +100,7 @@ class Catcher extends Phaser.Scene{
 	update(){
 		this.loading.anims.play('loadi',true);
 
-		this.human.setVelocityY(1000)
+		this.humans.setVelocityY(1000)
 		//this.humans.anims.play('tombe',true);
 		
 		if (this.cursors.right.isDown){
@@ -109,16 +115,14 @@ class Catcher extends Phaser.Scene{
 		};
 	}
 
-	point(player1,human){
+	point(player1,humans){
 		var score = 0;
 		score += 1;
-		this.human.disableBody(true,true);
-		//this.human.destroy(true);
-		console.log(score + 1);
+		
+		//this.humans.disableBody(true,true);
+		console.log(score);
    		this.scoreText.setText('score: '+ score);
-/*
-   		this.human.children.iterate(function(child){
-			child.enableBody(true,child.x,0, true, true);
-		});	*/
+
+    	
 	}
 }
